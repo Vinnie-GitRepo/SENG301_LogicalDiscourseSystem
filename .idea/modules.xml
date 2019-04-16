@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/301Assignment.iml" filepath="$PROJECT_DIR$/.idea/modules/301Assignment.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/seng301-assignment-build.iml" filepath="$PROJECT_DIR$/.idea/modules/seng301-assignment-build.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/root-301please-build.iml" filepath="$PROJECT_DIR$/.idea/modules/root-301please-build.iml" />
     </modules>
   </component>
 </project>
