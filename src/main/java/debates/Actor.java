@@ -24,28 +24,60 @@ public class Actor {
 
     /**
      * The calculated quantification of an actor's credibility.
-     * The value is the sum of the confidence levels of all the arguments and sources contributed by the actor.
+     * The value is the sum of the confidence levels of all the arguments contributed by the actor.
      */
     private double levelOfTrust;
 
 
+    /**
+     * The list of organisations the actor is affiliated with.
+     */
     private ArrayList<Affiliation> affiliations = new ArrayList<Affiliation>();
 
+
+    /**
+     * Constructor for the actor which does not include the level of trust.
+     * @param fname
+     * @param lname
+     */
     public Actor (String fname, String lname) {
         this.firstname = fname;
         this.lastname = lname;
     }
 
+
+    /**
+     * Constructor for the actor which does include the level of trust.
+     * @param fname
+     * @param lname
+     * @param trust
+     */
     public Actor (String fname, String lname, double trust) {
         this.firstname = fname;
         this.lastname = lname;
         this.levelOfTrust = trust;
     }
 
-    public void insertAffiliation() {
-        affiliations.add(new Affiliation());
+
+    /**
+     * Insert an affiliation for an actor where the organisation is not yet registered within the database.
+     * @param role
+     * @param start
+     * @param end
+     * @param newOrg
+     */
+    public void insertAffiliation(String role, Date start, Date end, String newOrg) {
+        affiliations.add(new Affiliation(role, start, end, newOrg));
     }
 
+
+    /**
+     * Insert an affiliation for an actor where the organisation is registered within the database.
+     * @param role
+     * @param start
+     * @param end
+     * @param org
+     */
     public void insertAffiliation(String role, Date start, Date end, Organisation org) {
         affiliations.add(new Affiliation(role, start, end, org));
     }

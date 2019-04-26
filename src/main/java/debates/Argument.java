@@ -24,7 +24,7 @@ public class Argument {
 
 
     /**
-     * The calculated level of validity associated with an argument.
+     * The calculated level of validity associated with an argument based on its source.
      * This value will be used when calculating the level of trust associated with an actor.
      */
     private double confidenceLevel;
