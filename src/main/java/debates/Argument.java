@@ -22,4 +22,11 @@ public class Argument {
      */
     private int endIndex;
 
+
+    /**
+     * The calculated level of validity associated with an argument.
+     * This value will be used when calculating the level of trust associated with an actor.
+     */
+    private double confidenceLevel;
+
 }
