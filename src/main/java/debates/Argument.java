@@ -29,4 +29,11 @@ public class Argument {
      */
     private double confidenceLevel;
 
+
+    public Argument(String re, int start, int end) {
+        this.rephrasing = re;
+        this.startIndex = start;
+        this.endIndex = end;
+    }
+
 }
