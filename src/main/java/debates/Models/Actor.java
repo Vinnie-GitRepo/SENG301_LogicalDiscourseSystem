@@ -1,4 +1,4 @@
-package debates;
+package debates.Models;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -20,13 +20,6 @@ public class Actor {
      * This is used to help distinguish different actors, and will be used in homonym checking.
      */
     private String lastname;
-
-
-    /**
-     * The calculated quantification of an actor's credibility.
-     * The value is the sum of the confidence levels of all the arguments contributed by the actor.
-     */
-    private double levelOfTrust;
 
 
     /**
@@ -55,7 +48,6 @@ public class Actor {
     public Actor (String fname, String lname, double trust) {
         this.firstname = fname;
         this.lastname = lname;
-        this.levelOfTrust = trust;
     }
 
 

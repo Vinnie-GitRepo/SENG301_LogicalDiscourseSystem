@@ -1,4 +1,4 @@
-package debates;
+package debates.Models;
 
 import java.util.Date;
 

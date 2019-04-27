@@ -1,4 +1,4 @@
-package debates;
+package debates.Models;
 
 /**
  * A rephrasing of a sentence related to a Discourse object, created by taking unique slices of a Discourse object.
@@ -24,12 +24,11 @@ public class Argument {
 
 
     /**
-     * The calculated level of validity associated with an argument based on its source.
-     * This value will be used when calculating the level of trust associated with an actor.
+     *
+     * @param re
+     * @param start
+     * @param end
      */
-    private double confidenceLevel;
-
-
     public Argument(String re, int start, int end) {
         this.rephrasing = re;
         this.startIndex = start;
