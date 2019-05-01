@@ -5,8 +5,15 @@ package debates;
  */
 public class Organisation {
 
+    /**
+     * The name of the organisation
+     */
     private String name;
 
+    /**
+     * Constructor for an organisation
+     * @param n The name of the organisation
+     */
     public Organisation(String n) {
         this.name = n;
     }

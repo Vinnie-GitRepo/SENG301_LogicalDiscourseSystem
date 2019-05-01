@@ -17,4 +17,14 @@ public class Source {
      */
     private double confidenceLevel;
 
+
+    /**
+     * Constructor for a source
+     * @param n The name of the source.
+     * @param c The calculated level of validity associated with a source.
+     */
+    public Source(String n, double c) {
+        this.name = n;
+        this.confidenceLevel = c;
+    }
 }

@@ -29,7 +29,12 @@ public class Argument {
      */
     private double confidenceLevel;
 
-
+    /**
+     * Constructor for an argument
+     * @param re The string obtained from a slice of Discourse object's text, using indexes.
+     * @param start The start index of a Discourse object's text slice, from which the rephrasing will be obtained.
+     * @param end The end index of a Discourse object's text slice, from which the rephrasing will be obtained.
+     */
     public Argument(String re, int start, int end) {
         this.rephrasing = re;
         this.startIndex = start;
