@@ -1,5 +1,7 @@
 package debates.Repositories;
 
+import debates.Models.Organisation;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,6 +38,17 @@ public class OrganisationRepository {
 
         // If the query returns anything, then return true, else false.
         return (set.next() == true);
+    }
+
+    public Organisation retrieveOrganisation(Connection connection, String name) throws SQLException {
+
+        PreparedStatement nameQuery = connection.prepareStatement("SELECT name FROM organisation WHERE name = ?");
+        nameQuery.setString(1, name);
+        String orgName = nameQuery.executeQuery().toString();
+
+        Organisation organisation = new Organisation(orgName);
+
+        return organisation;
     }
 
 }
