@@ -1,4 +1,4 @@
-package debates.models;
+package debates.Models;
 
 /**
  * A unique entity which may be affiliated with any number of actors.
