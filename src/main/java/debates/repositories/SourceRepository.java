@@ -1,4 +1,4 @@
-package debates.Repositories;
+package debates.repositories;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

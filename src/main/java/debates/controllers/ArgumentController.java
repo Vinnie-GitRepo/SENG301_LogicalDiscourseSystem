@@ -1,8 +1,8 @@
-package debates.Controllers;
+package debates.controllers;
 
 
 
-import debates.Repositories.ArgumentRepository;
+import debates.repositories.ArgumentRepository;
 
 import java.sql.Connection;
 import java.sql.SQLException;
