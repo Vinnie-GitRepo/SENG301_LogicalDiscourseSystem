@@ -1,11 +1,16 @@
 package debates.Controllers;
 
+import debates.Models.Actor;
+import debates.Models.Affiliation;
 import debates.Repositories.ActorRepository;
+import debates.Repositories.OrganisationRepository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 /**
@@ -26,9 +31,27 @@ public class ActorController {
 
 
     /**
+     * A constant for informing the user about what affiliation date they're entering.
+     */
+    private final String START_DATE = "starting";
+
+
+    /**
+     * A constant for informing the user about what affiliation date they're entering.
+     */
+    private final String END_DATE = "end";
+
+
+    /**
      * The repository handling database-level operations for actors.
      */
-    private ActorRepository repository = new ActorRepository();
+    private ActorRepository actorRepository = new ActorRepository();
+
+
+    /**
+     * The repository handling database-level operations for organisations.
+     */
+    private OrganisationRepository organisationRepository = new OrganisationRepository();
 
 
     /**
@@ -85,12 +108,12 @@ public class ActorController {
 
 
         // Check is the names of the new actor match those of any actors in the database
-        if (repository.isHomonym(connection, firstName, lastName)) {
+        if (actorRepository.isHomonym(connection, firstName, lastName)) {
             provideExistingActorDetails();
             boolean isConfirmed = getConfirmation();
             if (isConfirmed) {
 
-                repository.insertNewActor(connection, actor);
+                actorRepository.insertNewActor(connection, actor);
             }
         } else {
 
@@ -99,26 +122,45 @@ public class ActorController {
 
 
     /**
-     *
-     * @param connection
+     * Method handling the registration of an actor's affiliation with an organisation.
+     * @param connection A non-null connnection to the database.
      */
     public void registerAffiliation(Connection connection) {
 
         System.out.println("Would you like to register an affiliation?");
         Scanner userResponse = new Scanner(System.in);
-
-        // Check the user input for a valid answer
-
         String response = userResponse.nextLine();
+
+
+
+
+        // Check the user input for a valid answer.
         if (response.equals(YES)) {
 
-            System.out.println("Provide the roll occupied by the actor (Optional)");
+            Affiliation affiliation = new Affiliation();
+
+            System.out.println("Provide the roll occupied by the actor. (Optional)");
             Scanner affiliationRole =  new Scanner(System.in);
+            String roleText = affiliationRole.nextLine();
 
-            System.out.println("Provide the organisation affiliated with the actor (Optional)");
+
+
+            System.out.println("Provide the organisation affiliated with the actor. (Optional)");
             Scanner affiliationOrganisation = new Scanner(System.in);
+            String organisationText = affiliationOrganisation.nextLine();
 
-            System.out.println("Provide the starting date ");
+            repository.name
+
+
+            // Get the start date for a user affiliation.
+            Date startDate = affiliationDateProcedure(START_DATE);
+
+            // Get the end date for a user affiliation.
+            Date endDate = affiliationDateProcedure(END_DATE);
+
+
+
+
 
 
         } else if (response.equals(NO)) {
@@ -127,9 +169,36 @@ public class ActorController {
             System.out.println("Your response must be a 'y' or a 'n'. Try again.");
             registerAffiliation(connection);
         }
-
-
     }
+
+
+    /**
+     * Method handling the creation a Date objects for use in affiliations.
+     * Used for creating both the starting date and end date of a new affiliation.
+     * @param printString The worded context for the command line message. Should only be "starting" or "end"
+     * @return a Date object to set as an Affiliation attribute.
+     */
+    public Date affiliationDateProcedure(String printString) {
+
+        // Ask user for a date
+        System.out.println("Provide the " + printString + " date of the affiliation, in DD/MM/YYYY format. (Optional)");
+        Scanner affiliationDate = new Scanner(System.in);
+        String dateText = affiliationDate.nextLine();
+        Date date = null;
+
+        // Determine whether the date should remain null, and try to parse if an entry is detected.
+        if (!dateText.equals("")) {
+            try {
+                date = new SimpleDateFormat("dd/MM/yyyy").parse(dateText);
+            } catch (java.text.ParseException e) {
+                System.out.println("We couldn't process your input, so the date will remain null");
+            }
+        }
+
+        return date;
+    }
+
+
 
 
 

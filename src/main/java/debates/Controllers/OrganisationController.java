@@ -44,7 +44,7 @@ public class OrganisationController {
 
         // Check the user input for a valid answer.
         try {
-            String response = inputResponse.nextLine();
+            String response = userResponse.nextLine();
             if (response.equals(YES)) {
                 nameOrganisation(connection);
             } else if (response.equals(NO)) {
