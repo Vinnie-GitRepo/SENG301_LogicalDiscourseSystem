@@ -1,4 +1,4 @@
-package debates.Models;
+package debates.models;
 
 /**
  * A link between two Argument objects

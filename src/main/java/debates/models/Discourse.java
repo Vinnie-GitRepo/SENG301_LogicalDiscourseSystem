@@ -1,4 +1,4 @@
-package debates.Models;
+package debates.models;
 
 /**
  * A named collection of Argument objects taken from a Source.

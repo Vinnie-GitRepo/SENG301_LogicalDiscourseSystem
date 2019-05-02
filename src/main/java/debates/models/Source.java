@@ -1,4 +1,4 @@
-package debates.Models;
+package debates.models;
 
 /**
  * A named reference backing any number of discourses.

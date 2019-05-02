@@ -1,13 +1,10 @@
-package debates.Controllers;
+package debates.controllers;
 
-import debates.Models.Actor;
-import debates.Models.Affiliation;
-import debates.Repositories.ActorRepository;
-import debates.Repositories.OrganisationRepository;
+import debates.models.Affiliation;
+import debates.repositories.ActorRepository;
+import debates.repositories.OrganisationRepository;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;

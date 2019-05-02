@@ -1,4 +1,4 @@
-package debates.Models;
+package debates.models;
 
 /**
  * A rephrasing of a sentence related to a Discourse object, created by taking unique slices of a Discourse object.

@@ -1,10 +1,8 @@
-package debates.Controllers;
+package debates.controllers;
 
-import debates.Repositories.OrganisationRepository;
+import debates.repositories.OrganisationRepository;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Scanner;
 

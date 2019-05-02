@@ -1,6 +1,6 @@
-package debates.Repositories;
+package debates.repositories;
 
-import debates.Models.Actor;
+import debates.models.Actor;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

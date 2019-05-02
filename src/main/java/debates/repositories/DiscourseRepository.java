@@ -1,4 +1,4 @@
-package debates.Repositories;
+package debates.repositories;
 
 /**
  * Class handling discourses at a database level.

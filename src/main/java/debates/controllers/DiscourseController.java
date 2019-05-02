@@ -1,6 +1,6 @@
-package debates.Controllers;
+package debates.controllers;
 
-import debates.Repositories.DiscourseRepository;
+import debates.repositories.DiscourseRepository;
 
 /**
  * Class controlling discourses at a business-logic level.
