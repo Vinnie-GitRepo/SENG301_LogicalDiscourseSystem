@@ -17,7 +17,7 @@ public class Main {
      * @param args The array of String arguments
      */
     public static void main(String[] args) {
-        String url = "";
+        String url = "jdbc:sqlite:assignment2";
         try (Connection connection = DriverManager.getConnection(url)) {
             IndexController index = new IndexController();
             index.presentHomePageOptions(connection);

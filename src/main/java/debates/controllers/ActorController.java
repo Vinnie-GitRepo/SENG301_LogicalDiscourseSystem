@@ -125,7 +125,7 @@ public class ActorController {
                 actorRepository.insertNewActor(connection, actor);
             }
         } else {
-
+            actorRepository.insertNewActor(connection, actor);
         }
     }
 
