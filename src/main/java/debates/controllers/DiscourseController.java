@@ -41,7 +41,7 @@ public class DiscourseController {
      * @param connection A non-null connection to the database.
      */
     public void registerDiscourse(Connection connection) {
-        // Ask a user if they wish to create a actor, scanning for a response.
+        // Ask a user if they wish to create a discourse, scanning for a response.
         System.out.println("Would you like to create a discourse? (y/n)");
         Scanner userResponse = new Scanner(System.in);
 

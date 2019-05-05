@@ -10,6 +10,24 @@ import java.sql.SQLException;
  */
 public class ArgumentRepository {
 
+
+    public String getAllArguments(Connection connection) throws SQLException {
+        PreparedStatement discourse = connection.prepareStatement("SELECT (id, rephrasing) FROM argument");
+        ResultSet set = discourse.executeQuery();
+        discourse.closeOnCompletion();
+        return set.toString();
+    }
+
+    public String getDiscourseName(Connection connection, int argId) throws SQLException {
+        // Query the database for the discourse that an argument of a given id belongs to.
+        PreparedStatement discourse = connection.prepareStatement("SELECT discourse_name FROM argument WHERE id = ?");
+        discourse.setInt(1, argId);
+        ResultSet set = discourse.executeQuery();
+        discourse.closeOnCompletion();
+
+        return set.getString("discourse_name");
+    }
+
     /**
      * @param connection A non-null connection to the database.
      * @param rephrasing
@@ -20,6 +38,8 @@ public class ArgumentRepository {
     public void insertNewArgument(Connection connection, String rephrasing, int start, int end) throws SQLException {
         PreparedStatement statement = connection.prepareStatement("INSERT INTO argument(rephrasing, start, end) VALUE (?)");
         statement.setString(1, rephrasing);
+        statement.setInt(2, start);
+        statement.setInt(3, end);
         statement.executeUpdate();
         statement.closeOnCompletion();
     }

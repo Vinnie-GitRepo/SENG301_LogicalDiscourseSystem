@@ -19,20 +19,24 @@ public class Discourse {
     private Source source;
 
     /**
-     * A list of Argument objects
+     * The text comprising the discourse
      */
-    private ArrayList<Argument> arguments = new ArrayList<Argument>();
+    private String text;
 
     /**
      * Constructor for a discourse
      * @param n Name of the discourse
      * @param s The source from which the arguments are taken from
-     * @param args A list of Argument objects
+     * @param t The text comprising the discourse
      */
-    public Discourse(String n, Source s, ArrayList<Argument> args) {
+    public Discourse(String n, Source s, String t) {
         this.name = n;
         this.source = s;
-        this.arguments = args;
+        this.text = t;
+    }
+
+    public String getText() {
+        return text;
     }
 
 }
