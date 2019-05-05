@@ -24,6 +24,7 @@ public class ArgumentRepository {
         statement.closeOnCompletion();
     }
 
+
     /**
      * Method checking for the existence of an argument within the database.
      * @param connection A non-null connection to the database.

@@ -40,6 +40,14 @@ public class OrganisationRepository {
         return (set.next() == true);
     }
 
+
+    /**
+     *
+     * @param connection
+     * @param name
+     * @return
+     * @throws SQLException
+     */
     public Organisation retrieveOrganisation(Connection connection, String name) throws SQLException {
 
         PreparedStatement nameQuery = connection.prepareStatement("SELECT name FROM organisation WHERE name = ?");

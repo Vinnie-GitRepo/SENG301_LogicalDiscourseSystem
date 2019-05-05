@@ -1,6 +1,8 @@
 package debates.controllers;
 
+import debates.models.Actor;
 import debates.models.Affiliation;
+import debates.models.Organisation;
 import debates.repositories.ActorRepository;
 import debates.repositories.OrganisationRepository;
 
@@ -8,6 +10,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -40,6 +43,12 @@ public class ActorController {
 
 
     /**
+     * Index controller linking the this feature back to the home page.
+     */
+    private IndexController index = new IndexController();
+
+
+    /**
      * The repository handling database-level operations for actors.
      */
     private ActorRepository actorRepository = new ActorRepository();
@@ -66,7 +75,7 @@ public class ActorController {
             if (response.equals(YES)) {
                 nameActor(connection);
             } else if (response.equals(NO)) {
-                //TODO: return to main selection
+                index.presentHomePageOptions(connection);
             } else {
                 System.out.println("Your response must be a 'y' or a 'n'. Try again.");
                 registerActor(connection);
@@ -79,11 +88,13 @@ public class ActorController {
 
 
     /**
-     * Method handling the naming of actors
-     * @param connection
-     * @throws SQLException
+     * Method handling the naming of new actors.
+     * @param connection A non-null connection to the database.
+     * @throws SQLException The exception thrown if any issues occur when working with the database.
      */
     public void nameActor(Connection connection) throws SQLException {
+
+
         // Ask user to give a first name for an actor, then scan for a response.
         System.out.println("Please provide a first name.");
         Scanner inputFirstName = new Scanner(System.in);
@@ -96,9 +107,11 @@ public class ActorController {
         String lastName = inputLastName.nextLine();
 
 
+        Actor actor = new Actor(firstName, lastName);
+
 
         // Ask user to add affiliations.
-        registerAffiliation(connection);
+        registerAffiliation(connection, actor);
 
 
 
@@ -106,10 +119,9 @@ public class ActorController {
 
         // Check is the names of the new actor match those of any actors in the database
         if (actorRepository.isHomonym(connection, firstName, lastName)) {
-            provideExistingActorDetails();
+            provideExistingActorDetails(connection, actor);
             boolean isConfirmed = getConfirmation();
             if (isConfirmed) {
-
                 actorRepository.insertNewActor(connection, actor);
             }
         } else {
@@ -118,54 +130,92 @@ public class ActorController {
     }
 
 
+
     /**
      * Method handling the registration of an actor's affiliation with an organisation.
-     * @param connection A non-null connnection to the database.
+     * @param connection A non-null connection to the database.
+     * @throws SQLException The exception thrown if any issues occur when working with the database.
      */
-    public void registerAffiliation(Connection connection) {
+    public void registerAffiliation(Connection connection, Actor actor) throws SQLException {
 
-        System.out.println("Would you like to register an affiliation?");
-        Scanner userResponse = new Scanner(System.in);
-        String response = userResponse.nextLine();
+        boolean doneRegisteringAffiliations = false;
+
+        while (!doneRegisteringAffiliations) {
+
+            System.out.println("Would you like to register an affiliation? (y/n)");
+            Scanner userResponse = new Scanner(System.in);
+            String response = userResponse.nextLine();
+
+            // Check the user input for a valid answer.
+            if (response.equals(YES)) {
+                // Get the organisation of the affiliation from the user.
+                System.out.println("Provide the organisation affiliated with the actor. (Optional)");
+                Scanner affiliationOrganisation = new Scanner(System.in);
+                String organisationText = affiliationOrganisation.nextLine();
+
+                // Get the actor's role within the organisation from the user.
+                System.out.println("Provide the roll occupied by the actor. (Optional)");
+                Scanner affiliationRole =  new Scanner(System.in);
+                String roleText = affiliationRole.nextLine();
+
+                // Get the start date for an actor affiliation.
+                Date startDate = affiliationDateProcedure(START_DATE);
+
+                // Get the end date for a user an actor affiliation.
+                Date endDate = affiliationDateProcedure(END_DATE);
+
+                // Determine if the organisation exists, and if it does use that or else register a new organisation.
+                if (organisationRepository.nameExists(connection, organisationText)) {
+                    Organisation organisation = organisationRepository.retrieveOrganisation(connection, organisationText);
+                    actor.insertAffiliation(roleText, startDate, endDate, organisation);
+                } else {
+                    actor.insertAffiliation(roleText, startDate, endDate, organisationText);
+                }
+            } else if (response.equals(NO)) {
+                doneRegisteringAffiliations = true;
+            } else {
+                System.out.println("Your response must be a 'y' or a 'n'. Try again.");
+                registerAffiliation(connection, actor);
+            }
+        }
+
+
+    }
 
 
 
+    /**
+     * Method printing a list of already registered actors in the database whose names are the same as a new actor.
+     * @param connection A non-null connection to the database.
+     */
+    public void provideExistingActorDetails(Connection connection, Actor actor) throws SQLException {
 
-        // Check the user input for a valid answer.
+        List<Actor> actors = actorRepository.retrieveHomonymActors(connection, actor);
+
+    }
+
+
+    /**
+     * Method handling the user confirmation aspect of registering a homonym actor.
+     * @return true if the user enters 'y', and false if the user enters 'n'. Otherwise the function calls itself.
+     */
+    public boolean getConfirmation() {
+        System.out.println("Do you still wish to add this actor? (y/n)");
+        Scanner userInput = new Scanner(System.in);
+        String response = userInput.nextLine();
+
+        boolean result = true;
+
         if (response.equals(YES)) {
-
-            Affiliation affiliation = new Affiliation();
-
-            System.out.println("Provide the roll occupied by the actor. (Optional)");
-            Scanner affiliationRole =  new Scanner(System.in);
-            String roleText = affiliationRole.nextLine();
-
-
-
-            System.out.println("Provide the organisation affiliated with the actor. (Optional)");
-            Scanner affiliationOrganisation = new Scanner(System.in);
-            String organisationText = affiliationOrganisation.nextLine();
-
-            repository.name
-
-
-            // Get the start date for a user affiliation.
-            Date startDate = affiliationDateProcedure(START_DATE);
-
-            // Get the end date for a user affiliation.
-            Date endDate = affiliationDateProcedure(END_DATE);
-
-
-
-
-
-
+            result = true;
         } else if (response.equals(NO)) {
-
+            result = false;
         } else {
             System.out.println("Your response must be a 'y' or a 'n'. Try again.");
-            registerAffiliation(connection);
+            getConfirmation();
         }
+
+        return result;
     }
 
 
@@ -194,10 +244,5 @@ public class ActorController {
 
         return date;
     }
-
-
-
-
-
 
 }

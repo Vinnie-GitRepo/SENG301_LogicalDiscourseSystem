@@ -23,6 +23,7 @@ public class SourceRepository {
         statement.closeOnCompletion();
     }
 
+
     /**
      * Method checking for the existence of a name within the database.
      * @param connection A non-null connection to the database.

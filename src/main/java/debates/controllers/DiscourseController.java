@@ -25,6 +25,12 @@ public class DiscourseController {
 
 
     /**
+     * Index controller linking the this feature back to the home page.
+     */
+    private IndexController index = new IndexController();
+
+
+    /**
      * The discourseRepository handling database-level operations for discourses.
      */
     private DiscourseRepository discourseRepository = new DiscourseRepository();

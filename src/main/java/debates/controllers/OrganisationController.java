@@ -24,6 +24,12 @@ public class OrganisationController {
 
 
     /**
+     * Index controller linking the this feature back to the home page.
+     */
+    private IndexController index = new IndexController();
+
+
+    /**
      * The repository handling database-level operations for organisations.
      */
     private OrganisationRepository repository = new OrganisationRepository();
