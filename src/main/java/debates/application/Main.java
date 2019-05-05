@@ -1,3 +1,5 @@
+package debates.application;
+
 import debates.controllers.IndexController;
 
 import java.sql.Connection;
