@@ -8,6 +8,7 @@ import debates.repositories.DiscourseRepository;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -81,27 +82,48 @@ public class ArgumentController {
         // Ask user to specify a discourse, then scan for a response.
         Scanner input = new Scanner(System.in);
         System.out.println("Please select a discourse.");
-        String d = input.nextLine();
-        while (!discourseRepository.nameExists(connection, d)) {
-            System.out.println("That discourse does not exist. Please try again.");
+
+        String d;
+        try {
             d = input.nextLine();
+            while (!discourseRepository.nameExists(connection, d)) {
+                System.out.println("That discourse does not exist. Please try again.");
+                d = input.nextLine();
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("You may only enter strings.");
+            return;
         }
+
         Discourse discourse = discourseRepository.getDiscourse(connection, d);
         int discourseLength = discourse.getText().length();
 
+        // Ask user to specify start indices within the discourse, then scan for a response.
         System.out.println("Please type a start index in the discourse.");
-        int start = input.nextInt();
-        while (!(start < discourseLength)) {
-            System.out.println("That number is out of range. Please try again.");
+        int start;
+        try {
             start = input.nextInt();
+            while (!(start < discourseLength)) {
+                System.out.println("That number is out of range. Please try again.");
+                start = input.nextInt();
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("You may only enter numbers.");
+            return;
         }
 
         // Ask user to specify end indices within the discourse, then scan for a response.
         System.out.println("Please type an end index in the discourse.");
-        int end = input.nextInt();
-        while (!(end < discourseLength && start < end)) {
-            System.out.println("That number is out of range. Please try again.");
+        int end;
+        try {
             end = input.nextInt();
+            while (!(end < discourseLength && start < end)) {
+                System.out.println("That number is out of range. Please try again.");
+                end = input.nextInt();
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("You may only enter numbers.");
+            return;
         }
 
         // Check that the specified indices do not already exist with an argument.
@@ -109,17 +131,27 @@ public class ArgumentController {
             System.out.println("The argument already exists within the database. Please try again.");
             // Ask user to specify start indices within the discourse, then scan for a response.
             System.out.println("Please type a start index in the discourse.");
-            start = input.nextInt();
-            while (!(start < discourseLength)) {
-                System.out.println("That number is out of range. Please try again.");
+            try {
                 start = input.nextInt();
+                while (!(start < discourseLength)) {
+                    System.out.println("That number is out of range. Please try again.");
+                    start = input.nextInt();
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("You may only enter numbers.");
+                return;
             }
             // Ask user to specify end indices within the discourse, then scan for a response.
             System.out.println("Please type an end index in the discourse.");
-            end = input.nextInt();
-            while (!(end < discourseLength && start < end)) {
-                System.out.println("That number is out of range. Please try again.");
+            try {
                 end = input.nextInt();
+                while (!(end < discourseLength && start < end)) {
+                    System.out.println("That number is out of range. Please try again.");
+                    end = input.nextInt();
+                }
+            } catch (InputMismatchException e) {
+                System.out.println("You may only enter numbers.");
+                return;
             }
         }
 

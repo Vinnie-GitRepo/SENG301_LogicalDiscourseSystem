@@ -59,7 +59,7 @@ public class OrganisationRepository {
         // Query the database for an organisation with a name equivalent ot the new name being checked.
         PreparedStatement nameQuery = connection.prepareStatement("SELECT name FROM organisation WHERE name = ?");
         nameQuery.setString(1, name);
-        String orgName = nameQuery.executeQuery().toString();
+        String orgName = nameQuery.executeQuery().getString("name");
         nameQuery.closeOnCompletion();
 
         // Return the organisation found.

@@ -18,10 +18,9 @@ public class ArgumentRepository {
         argument.closeOnCompletion();
         List<String> arguments = new ArrayList<>();
         while (set.next()) {
-            arguments.add(set.getString("id") + " " + set.getString("rephrasing"));
+            arguments.add(set.getString("id") + ": " + set.getString("rephrasing"));
         }
         return arguments;
-//        return set.getString("id") + " " + set.getString("rephrasing");
     }
 
     public int getArgumentsLength(Connection connection) throws SQLException {
@@ -57,7 +56,6 @@ public class ArgumentRepository {
         statement.executeUpdate();
         statement.closeOnCompletion();
     }
-
 
     /**
      * Method checking for the existence of an argument within the database.
