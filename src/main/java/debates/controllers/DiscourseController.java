@@ -76,16 +76,21 @@ public class DiscourseController {
 
         // Ask user to name a discourse, then scan for a response.
         System.out.println("Please provide the discourse name.");
-        Scanner inputName = new Scanner(System.in);
-        String newName = inputName.nextLine();
+        Scanner response = new Scanner(System.in);
+        String newName = response.nextLine();
 
         // Ask user to name an existing source, then scan for a response
         System.out.println("Please provide a source name.");
-        String sourceName = inputName.nextLine();
+        String sourceName = response.nextLine();
+
+        // Ask user to enter some text for the discourse, then scan for a response.
+        System.out.println("Please enter some text for the discourse.");
+        String discourseText = response.next();
 
         // Check the user input against the acceptance criteria.
-        if (!discourseRepository.nameExists(connection, newName) && sourceRepository.nameExists(connection, sourceName)) {
-            discourseRepository.insertNewDiscourse(connection, newName, sourceName);
+        if (!discourseRepository.nameExists(connection, newName) && sourceRepository.nameExists(connection, sourceName)
+            && discourseText != null) {
+            discourseRepository.insertNewDiscourse(connection, newName, sourceName, discourseText);
             System.out.println("The discourse, " + newName + ", has been added successfully.");
         } else if (discourseRepository.nameExists(connection, newName)) {
             System.out.println("The discourse, " + newName + ", already exists within the database.");

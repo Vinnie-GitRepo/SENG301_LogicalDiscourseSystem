@@ -80,50 +80,6 @@ public class ArgumentController {
 
         // Ask user to specify a discourse, then scan for a response.
         Scanner input = new Scanner(System.in);
-        System.out.println("Please select a discourse");
-        String d = input.nextLine();
-        if (discourseRepository.nameExists(connection, d)) {
-            Discourse discourse = discourseRepository.getDiscourse(connection, d);
-            int discourseLength = discourse.getText().length();
-
-            // Ask user to specify start indices within the discourse, then scan for a response.
-            System.out.println("Please type a start index in the discourse.");
-            int start = input.nextInt();
-            // Ask user to specify end indices within the discourse, then scan for a response.
-            System.out.println("Please type an end index in the discourse.");
-            int end = input.nextInt();
-
-            // Check that the start and end indices are within length of the discourse,
-            // and the end indices are after the start indices.
-            if (start < discourseLength && end < discourseLength && start < end) {
-
-                // Check that the specified indices do not already exist with an argument.
-                if (!argumentRepository.argumentExists(connection, start, end)) {
-
-                    // Add a new argument to the database.
-                    String rephrasing = discourse.getText().substring(start, end);
-                    argumentRepository.insertNewArgument(connection, rephrasing, start, end);
-                    System.out.println("The argument, " + rephrasing + ", has been added successfully.");
-
-                } else if (argumentRepository.argumentExists(connection, start, end)) {
-                    System.out.println("The argument already exists within the database. Please try again.");
-                    createArgument(connection);
-                } else {
-                    System.out.println("There was an issue with your input. Please try again.");
-                    createArgument(connection);
-                }
-
-            }
-
-        } else {
-            System.out.println("There was an issue with your input. Please try again.");
-            createArgument(connection);
-        }
-    }
-
-    public void whileLoop(Connection connection) throws SQLException {
-        // Ask user to specify a discourse, then scan for a response.
-        Scanner input = new Scanner(System.in);
         System.out.println("Please select a discourse.");
         String d = input.nextLine();
         while (!discourseRepository.nameExists(connection, d)) {
@@ -169,8 +125,9 @@ public class ArgumentController {
 
         // Add a new argument to the database.
         String rephrasing = discourse.getText().substring(start, end);
-        argumentRepository.insertNewArgument(connection, rephrasing, start, end);
+        argumentRepository.insertNewArgument(connection, discourse.getName(), rephrasing, start, end);
         System.out.println("The argument, " + rephrasing + ", has been added successfully.");
+
     }
 
 }
