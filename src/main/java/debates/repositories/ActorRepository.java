@@ -17,9 +17,15 @@ import java.util.List;
 public class ActorRepository {
 
     /**
+     * Used for queries related to organisations, as organisations are a part of affiliations.
+     */
+    private OrganisationRepository organisationRepository = new OrganisationRepository();
+
+
+    /**
      * Checks if an actor within the database has the same names as a new actor being created.
      * Used when naming a new actor being registered, determining whether a confirmation message needs displaying.
-     * @param connection The connection to the database.
+     * @param connection A non-null connection to the database.
      * @param firstName The new first name being compared with existing actors through a query.
      * @param lastName The new last name being compared with existing actors through a query.
      * @return true if an existing actor has the same names, or false otherwise.
@@ -40,16 +46,17 @@ public class ActorRepository {
 
 
     /**
-     * Inserts a new actor into the database
+     * Inserts a new actor into the database.
      * @param connection A non-null connection to the database.
      * @param actor The actor being inserted into the database.
      * @throws SQLException The exception thrown if any issues occur when working with the database.
      */
     public void insertNewActor(Connection connection, Actor actor) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("INSERT INTO actor VALUES (?,?,?,?)");
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO actor VALUES (?,?)");
         statement.setString(1, actor.getFirstname());
         statement.setString(2, actor.getLastname());
-
+        statement.executeUpdate();
+        statement.closeOnCompletion();
     }
 
 
@@ -64,9 +71,9 @@ public class ActorRepository {
 
         // Find the actors whose names match those of 'actor'.
         PreparedStatement actorStatement = connection.prepareStatement("SELECT * " +
-                                                                            "FROM Actor " +
-                                                                            "WHERE fname = ? " +
-                                                                            "AND lname = ?");
+                                                                            "FROM actor " +
+                                                                            "WHERE first_name = ? " +
+                                                                            "AND last_name = ?");
         actorStatement.setString(1, actor.getFirstname());
         actorStatement.setString(2, actor.getLastname());
         ResultSet actorSet = actorStatement.executeQuery();
@@ -81,37 +88,31 @@ public class ActorRepository {
             String firstName = actorSet.getNString("fname");
             String lastName = actorSet.getNString("lname");
 
+            // An actor with 
             Actor homonymActor = new Actor(firstName, lastName);
 
             // Get the affiliations for each homonym actor.
             String actorId = actorSet.getNString("id");
             PreparedStatement affiliationStatement = connection.prepareStatement("SELECT * " +
                                                                                       "FROM Affiliation " +
-                                                                                      "WHERE actor = ?");
+                                                                                      "WHERE id = ?");
             affiliationStatement.setString(1, actorId);
             ResultSet affiliationSet = affiliationStatement.executeQuery();
             while (affiliationSet.next()) {
                 String role = affiliationSet.getNString("role");
                 Date startDate = affiliationSet.getDate("start");
                 Date endDate = affiliationSet.getDate("end");
-                String organisationId = affiliationSet.getNString("organisation");
+                String organisationText = affiliationSet.getNString("organisation");
 
                 // Get the organisation for each affiliation
-                PreparedStatement organisationStatement = connection.prepareStatement("SELECT * " +
-                                                                                           "FROM organisation " +
-                                                                                           "WHERE id = ?");
-                organisationStatement.setString(1, organisationId);
-                ResultSet organisationSet = organisationStatement.executeQuery();
-                Organisation organisation = new Organisation(organisationSet.getString("name"));
+                Organisation organisation = organisationRepository.retrieveOrganisation(connection, organisationText);
 
                 // Insert the affiliation into the homonym actor's list of affiliations.
                 homonymActor.insertAffiliation(role, startDate, endDate, organisation);
             }
-
             // Add a homonym actor to the result.
             homonymActors.add(homonymActor);
         }
-
         return homonymActors;
     }
 
