@@ -4,25 +4,31 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Class handling arguments at a database level.
  */
 public class ArgumentRepository {
 
-
-    public String getAllArguments(Connection connection) throws SQLException {
-        PreparedStatement argument = connection.prepareStatement("SELECT (id, rephrasing) FROM argument");
+    public List<String> getAllArguments(Connection connection) throws SQLException {
+        PreparedStatement argument = connection.prepareStatement("SELECT id, rephrasing FROM argument");
         ResultSet set = argument.executeQuery();
         argument.closeOnCompletion();
-        return set.toString();
+        List<String> arguments = new ArrayList<>();
+        while (set.next()) {
+            arguments.add(set.getString("id") + " " + set.getString("rephrasing"));
+        }
+        return arguments;
+//        return set.getString("id") + " " + set.getString("rephrasing");
     }
 
     public int getArgumentsLength(Connection connection) throws SQLException {
-        PreparedStatement count = connection.prepareStatement("SELECT count(*) FROM argument");
+        PreparedStatement count = connection.prepareStatement("SELECT count(*) as count FROM argument");
         ResultSet set = count.executeQuery();
         count.closeOnCompletion();
-        return set.getInt(0);
+        return set.getInt("count");
     }
 
     public String getDiscourseNameFromArgument(Connection connection, int argId) throws SQLException {

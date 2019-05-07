@@ -60,6 +60,7 @@ public class IndexController {
             } else if (choice.equals(LINK_ARGUMENTS)) {
                 argumentLinkController.registerArgumentLink(connection);
             } else if (choice.equals(EXIT_APPLICATION)) {
+                connection.close();
                 System.exit(EXIT_SUCCESS);
             } else {
                 System.out.println("\n[INVALID] - Please select a valid option, which is a listed number with no spacing.");
