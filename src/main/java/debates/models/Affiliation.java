@@ -65,4 +65,50 @@ public class Affiliation {
         this.endDate = end;
         this.organisation = org;
     }
+
+
+    /**
+     * Used when printing homonym actor affiliations.
+     * @return A string detailing the affiliation of a actor.
+     */
+    public String toString() {
+        String resultString = "Organisation: " + getOrganisation().getName()
+                            + "\nRole: " + getRole()
+                            + "\nStart Date: " + getStartDate().toString()
+                            + "\nEnd Date: " + getEndDate().toString();
+        return resultString;
+    }
+
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
+
+    public Organisation getOrganisation() {
+        return organisation;
+    }
+
+    public void setOrganisation(Organisation organisation) {
+        this.organisation = organisation;
+    }
 }

@@ -113,13 +113,12 @@ public class ActorController {
             if (isConfirmed) {
                 actorRepository.insertNewActor(connection, actor);
             } else {
-                return;
+                System.out.println("\nReturning to home page.\n");
             }
         } else {
             actorRepository.insertNewActor(connection, actor);
         }
     }
-
 
 
     /**
@@ -131,8 +130,7 @@ public class ActorController {
 
         boolean doneRegisteringAffiliations = false;
 
-        while (!doneRegisteringAffiliations) {
-
+        do  {
             System.out.println("Would you like to register an affiliation? (y/n)");
             Scanner userResponse = new Scanner(System.in);
             String response = userResponse.nextLine();
@@ -167,11 +165,10 @@ public class ActorController {
             } else {
                 System.out.println("Your response could not be read as it wasn't 'y' or 'n'. Try again.");
             }
-        }
+        } while (!doneRegisteringAffiliations);
 
 
     }
-
 
 
     /**
@@ -183,11 +180,19 @@ public class ActorController {
         List<Actor> actors = actorRepository.retrieveHomonymActors(connection, actor);
 
         System.out.println("Existing actors with the name " + actor.getFirstname() + " " + actor.getLastname());
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
         for (Actor homonymActor : actors) {
-
+            System.out.println("Actor Name: " + homonymActor.getFirstname() + " " + homonymActor.getLastname());
+            System.out.println("\nAffiliations: ");
+            if (homonymActor.getAffiliations().isEmpty()) {
+                System.out.println("No affiliations.\n");
+            } else {
+                for (Affiliation affiliation : homonymActor.getAffiliations()) {
+                    System.out.println(affiliation);
+                }
+            }
         }
-
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
     }
 
 

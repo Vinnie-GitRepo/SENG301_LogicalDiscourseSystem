@@ -46,7 +46,10 @@ public class ActorRepository {
      * @throws SQLException The exception thrown if any issues occur when working with the database.
      */
     public void insertNewActor(Connection connection, Actor actor) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("INSERT INTO actor VALUES (?)");
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO actor VALUES (?,?,?,?)");
+        statement.setString(1, actor.getFirstname());
+        statement.setString(2, actor.getLastname());
+
     }
 
 
