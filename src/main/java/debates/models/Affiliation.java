@@ -73,10 +73,30 @@ public class Affiliation {
      * @return A string detailing the affiliation of a actor.
      */
     public String toString() {
-        String resultString = "Organisation: " + getOrganisation().getName()
-                            + "\nRole: " + getRole()
-                            + "\nStart Date: " + getStartDate().toString()
-                            + "\nEnd Date: " + getEndDate().toString();
+
+        String resultString;
+        String printOrganisation = "Not available";
+        String printRole = "Not available";
+        String printStart = "Not available";
+        String printEnd = "Not available";
+
+        if (getOrganisation() != null) {
+            printOrganisation = getOrganisation().getName();
+        }
+        if (getRole() != null) {
+            printRole = getRole();
+        }
+        if (getStartDate() != null) {
+            printStart = getStartDate().toString();
+        }
+        if (getEndDate() != null) {
+            printEnd = getEndDate().toString();
+        }
+
+        resultString = "Organisation: " + printOrganisation
+                            + "\nRole: " + printRole
+                            + "\nStart Date: " + printStart
+                            + "\nEnd Date: " + printEnd;
         return resultString;
     }
 

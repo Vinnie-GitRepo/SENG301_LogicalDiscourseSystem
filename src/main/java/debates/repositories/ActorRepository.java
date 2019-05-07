@@ -4,11 +4,7 @@ import debates.models.Actor;
 import debates.models.Affiliation;
 import debates.models.Organisation;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Date;
+import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +13,6 @@ import java.util.List;
  * Class handling actors at a database level.
  */
 public class ActorRepository {
-
-
-
 
     /**
      * Used for queries related to organisations, as organisations are a part of affiliations.
@@ -59,16 +52,16 @@ public class ActorRepository {
     public void insertNewActor(Connection connection, Actor actor) throws SQLException {
 
         // Update the actor table with the new actor.
-        PreparedStatement statement = connection.prepareStatement("INSERT INTO actor(first_name, last_name) VALUES (?,?)");
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO actor(first_name, last_name) VALUES (?,?)", Statement.RETURN_GENERATED_KEYS);
         statement.setString(1, actor.getFirstname());
         statement.setString(2, actor.getLastname());
         statement.executeUpdate();
-        statement.closeOnCompletion();
 
         // Retrieve the id of the actor inserted.
-        PreparedStatement idStatement = connection.prepareStatement("SELECT MAX(id) FROM actor");
-        ResultSet actorIdSet = idStatement.executeQuery();
-        int actorId = actorIdSet.getRow();
+        ResultSet set = statement.getGeneratedKeys();
+        statement.closeOnCompletion();
+
+        int actorId = set.getInt(1);
 
         if (!actor.getAffiliations().isEmpty()) {
             for (Affiliation affiliation : actor.getAffiliations()) {
@@ -115,6 +108,9 @@ public class ActorRepository {
                 statement.setString(5, null);
             } else {
                 statement.setString(5, affiliation.getOrganisation().getName());
+                if (!organisationRepository.nameExists(connection, affiliation.getOrganisation().getName())) {
+                    organisationRepository.insertNewOrganisation(connection, affiliation.getOrganisation().getName());
+                }
             }
             statement.executeUpdate();
         } catch (Exception e) {
@@ -162,10 +158,24 @@ public class ActorRepository {
             affiliationStatement.setString(1, actorId);
             ResultSet affiliationSet = affiliationStatement.executeQuery();
             while (affiliationSet.next()) {
-                String role = affiliationSet.getString("role");
-                LocalDate startDate = affiliationSet.getDate("start_date").toLocalDate();
-                LocalDate endDate = affiliationSet.getDate("end_date").toLocalDate();
-                String organisationText = affiliationSet.getNString("organisation");
+
+                String role = null;
+                LocalDate startDate = null;
+                LocalDate endDate = null;
+                String organisationText = null;
+
+                if (affiliationSet.getString("role") != null) {
+                    role = affiliationSet.getString("role");
+                }
+                if (affiliationSet.getDate("start_date") != null) {
+                    startDate = affiliationSet.getDate("start_date").toLocalDate();
+                }
+                if (affiliationSet.getDate("end_date") != null){
+                    endDate = affiliationSet.getDate("end_date").toLocalDate();
+                }
+                if (affiliationSet.getString("organisation") != null) {
+                    organisationText = affiliationSet.getString("organisation");
+                }
 
                 // Get the organisation for each affiliation
                 Organisation organisation = organisationRepository.retrieveOrganisation(connection, organisationText);

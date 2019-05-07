@@ -159,7 +159,6 @@ public class ActorController {
                 if (organisationRepository.nameExists(connection, organisationText)) {
                     Organisation organisation = organisationRepository.retrieveOrganisation(connection, organisationText);
                     actor.insertAffiliation(roleText, startDate, endDate, organisation);
-                    //actorRepository.insertNewAffiliation(connection, roleText, startDate, endDate, organisation);
                 } else {
                     actor.insertAffiliation(roleText, startDate, endDate, organisationText);
                 }

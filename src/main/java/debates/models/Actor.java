@@ -75,28 +75,16 @@ public class Actor {
         affiliations.add(new Affiliation(role, start, end, org));
     }
 
-
     public String getFirstname() {
         return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
     }
 
     public String getLastname() {
         return lastname;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
     public ArrayList<Affiliation> getAffiliations() {
         return affiliations;
     }
 
-    public void setAffiliations(ArrayList<Affiliation> affiliations) {
-        this.affiliations = affiliations;
-    }
 }
