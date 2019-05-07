@@ -12,6 +12,12 @@ import java.sql.SQLException;
  */
 public class OrganisationRepository {
 
+    /**
+     * Inserts a new organisation into the database.
+     * @param connection A non-null connection to the database.
+     * @param name The name of the new organisation being inserted.
+     * @throws SQLException The exception thrown if any issues occur when working with the database.
+     */
     public void insertNewOrganisation(Connection connection, String name) throws SQLException {
         PreparedStatement statement = connection.prepareStatement("INSERT INTO organisation VALUES (?)");
         statement.setString(1, name);
@@ -26,7 +32,7 @@ public class OrganisationRepository {
      * @param connection A non-null connection to the database.
      * @param newName The proposed name for a new organisation, which is being checked for uniqueness.
      * @return true if an organisation exists with the name being checked, false otherwise.
-     * @throws SQLException
+     * @throws SQLException The exception thrown if any issues occur when working with the database.
      */
     public boolean nameExists(Connection connection, String newName) throws SQLException {
 
@@ -42,21 +48,22 @@ public class OrganisationRepository {
 
 
     /**
-     *
-     * @param connection
-     * @param name
-     * @return
-     * @throws SQLException
+     * Method used to retrieve an organisation by querying the database using name as a search parameter.
+     * @param connection A non-null connection to the database.
+     * @param name The name of the organisation we're attempting to retrieve.
+     * @return An Organisation object correcponding to the name parameter.
+     * @throws SQLException The exception thrown if any issues occur when working with the database.
      */
     public Organisation retrieveOrganisation(Connection connection, String name) throws SQLException {
 
+        // Query the database for an organisation with a name equivalent ot the new name being checked.
         PreparedStatement nameQuery = connection.prepareStatement("SELECT name FROM organisation WHERE name = ?");
         nameQuery.setString(1, name);
         String orgName = nameQuery.executeQuery().toString();
+        nameQuery.closeOnCompletion();
 
-        Organisation organisation = new Organisation(orgName);
-
-        return organisation;
+        // Return the organisation found.
+        return new Organisation(orgName);
     }
 
 }

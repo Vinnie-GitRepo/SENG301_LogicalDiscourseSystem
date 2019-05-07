@@ -43,12 +43,6 @@ public class ActorController {
 
 
     /**
-     * Index controller linking the this feature back to the home page.
-     */
-//    private IndexController index = new IndexController();
-
-
-    /**
      * The repository handling database-level operations for actors.
      */
     private ActorRepository actorRepository = new ActorRepository();
@@ -81,13 +75,11 @@ public class ActorController {
             if (response.equals(YES)) {
                 nameActor(connection);
             } else if (response.equals(NO)) {
-                return;
+                System.out.println("\nReturning to home page.\n");
             }
 
         } catch (Exception e) {
             e.printStackTrace();
-//            registerActor(connection);
-            return;
         }
     }
 
@@ -173,9 +165,7 @@ public class ActorController {
             } else if (response.equals(NO)) {
                 doneRegisteringAffiliations = true;
             } else {
-//                System.out.println("Your response must be a 'y' or a 'n'. Try again.");
-//                registerAffiliation(connection, actor);
-                return;
+                System.out.println("Your response could not be read as it wasn't 'y' or 'n'. Try again.");
             }
         }
 
@@ -192,6 +182,12 @@ public class ActorController {
 
         List<Actor> actors = actorRepository.retrieveHomonymActors(connection, actor);
 
+        System.out.println("Existing actors with the name " + actor.getFirstname() + " " + actor.getLastname());
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        for (Actor homonymActor : actors) {
+
+        }
+
     }
 
 
@@ -206,20 +202,13 @@ public class ActorController {
 
         boolean result = true;
 
-//        if (response.equals(YES)) {
-//            result = true;
-//        } else if (response.equals(NO)) {
-//            result = false;
-//        } else {
-//            System.out.println("Your response must be a 'y' or a 'n'. Try again.");
-//            getConfirmation();
-//        }
-
+        // Check for valid input
         while (!(response.equals(YES) || response.equals(NO))) {
             System.out.println("Your response must be a 'y' or a 'n'. Try again.");
             response = userInput.nextLine();
         }
 
+        // The user confirms or denies the insertion of a homonym actor.
         if (response.equals(YES)) {
             result = true;
         } else if (response.equals(NO)) {

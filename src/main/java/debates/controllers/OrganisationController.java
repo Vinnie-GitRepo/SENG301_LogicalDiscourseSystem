@@ -24,12 +24,6 @@ public class OrganisationController {
 
 
     /**
-     * Index controller linking the this feature back to the home page.
-     */
-//    private IndexController index = new IndexController();
-
-
-    /**
      * The repository handling database-level operations for organisations.
      */
     private OrganisationRepository repository = new OrganisationRepository();
@@ -58,8 +52,7 @@ public class OrganisationController {
             if (response.equals(YES)) {
                 nameOrganisation(connection);
             } else if (response.equals(NO)) {
-                //TODO: return to main selection
-                return;
+                System.out.println("\nReturning to home page.\n");
             }
 
         } catch (Exception e) {
@@ -88,8 +81,7 @@ public class OrganisationController {
             System.out.println("The organisation, " + newName + ", already exists within the database.");
             return;
         } else {
-            System.out.println("There was an issue with your input.");
-            return;
+            System.out.println("There was an issue with your input. Creation failed. Returning to homepage.");
         }
     }
 

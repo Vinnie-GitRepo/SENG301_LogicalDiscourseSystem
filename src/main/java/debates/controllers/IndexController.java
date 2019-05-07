@@ -34,37 +34,37 @@ public class IndexController {
      */
     public void presentHomePageOptions(Connection connection) throws SQLException {
 
-        System.out.println("Welcome to our debate system. Select a number from the options below \n");
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
-        System.out.println("(1): Register an organisation. \n");
-        System.out.println("(2): Register an actor. \n");
-        System.out.println("(3): Register a discourse. \n");
-        System.out.println("(4): Register an argument. \n");
-        System.out.println("(5): Create a link between two arguments. \n");
-        System.out.println("(0): Quit application. \n");
-        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+        while (true) {
 
-        Scanner userInput = new Scanner(System.in);
-        String choice = userInput.nextLine();
+            System.out.println("\nWelcome to our debate system. Select a number from the options below \n");
+            System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
+            System.out.println("(1): Register an organisation. \n");
+            System.out.println("(2): Register an actor. \n");
+            System.out.println("(3): Register a discourse. \n");
+            System.out.println("(4): Register an argument. \n");
+            System.out.println("(5): Create a link between two arguments. \n");
+            System.out.println("(0): Quit application. \n");
+            System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
 
-        if (choice.equals(REGISTER_ORGANISATION)) {
-            organisationController.registerOrganisation(connection);
-        } else if (choice.equals(REGISTER_ACTOR)) {
-            actorController.registerActor(connection);
-        } else if (choice.equals(REGISTER_DISCOURSE)) {
-            discourseController.registerDiscourse(connection);
-        } else if (choice.equals(REGISTER_ARGUMENT)) {
-            argumentController.registerArgument(connection);
-        } else if (choice.equals(LINK_ARGUMENTS)) {
-            argumentLinkController.registerArgumentLink(connection);
-        } else if (choice.equals(EXIT_APPLICATION)) {
-            System.exit(EXIT_SUCCESS);
-        } else {
-            System.out.println("\n[INVALID] - Please select a valid option, which is a listed number with no spacing.");
-//            presentHomePageOptions(connection);
-            return;
+            Scanner userInput = new Scanner(System.in);
+            String choice = userInput.nextLine();
+
+            if (choice.equals(REGISTER_ORGANISATION)) {
+                organisationController.registerOrganisation(connection);
+            } else if (choice.equals(REGISTER_ACTOR)) {
+                actorController.registerActor(connection);
+            } else if (choice.equals(REGISTER_DISCOURSE)) {
+                discourseController.registerDiscourse(connection);
+            } else if (choice.equals(REGISTER_ARGUMENT)) {
+                argumentController.registerArgument(connection);
+            } else if (choice.equals(LINK_ARGUMENTS)) {
+                argumentLinkController.registerArgumentLink(connection);
+            } else if (choice.equals(EXIT_APPLICATION)) {
+                System.exit(EXIT_SUCCESS);
+            } else {
+                System.out.println("\n[INVALID] - Please select a valid option, which is a listed number with no spacing.");
+            }
         }
     }
-
 
 }

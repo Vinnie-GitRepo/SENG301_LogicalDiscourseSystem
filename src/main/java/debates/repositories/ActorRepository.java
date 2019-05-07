@@ -1,6 +1,7 @@
 package debates.repositories;
 
 import debates.models.Actor;
+import debates.models.Organisation;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -50,11 +51,11 @@ public class ActorRepository {
 
 
     /**
-     *
-     * @param connection
-     * @param actor
-     * @return
-     * @throws SQLException
+     * Retrieves a list of homonym actors so that their details can be presented to a user creating a homonym actor
+     * @param connection A non-null connection to the database.
+     * @param actor The actor whose name corresponds to other actors already stored on the database.
+     * @return A list of Actors whose names match an actor being created, which includes their affiliations.
+     * @throws SQLException The exception thrown if any errors occur when working with the database.
      */
     public List<Actor> retrieveHomonymActors(Connection connection, Actor actor) throws SQLException{
 
@@ -68,7 +69,9 @@ public class ActorRepository {
         ResultSet actorSet = actorStatement.executeQuery();
         actorStatement.closeOnCompletion();
 
+        // The list of homonym actors who will have their details presented to a user when they create a homonym actor.
         List<Actor> homonymActors = new ArrayList<>();
+
         while (actorSet.next()) {
 
             // Get the name of each homonym actor in the result set.
@@ -90,14 +93,21 @@ public class ActorRepository {
                 Date endDate = affiliationSet.getDate("end");
                 String organisationId = affiliationSet.getNString("organisation");
 
-                // homonymActor.insertAffiliation();
+                // Get the organisation for each affiliation
+                PreparedStatement organisationStatement = connection.prepareStatement("SELECT * " +
+                                                                                           "FROM organisation " +
+                                                                                           "WHERE id = ?");
+                organisationStatement.setString(1, organisationId);
+                ResultSet organisationSet = organisationStatement.executeQuery();
+                Organisation organisation = new Organisation(organisationSet.getString("name"));
+
+                // Insert the affiliation into the homonym actor's list of affiliations.
+                homonymActor.insertAffiliation(role, startDate, endDate, organisation);
             }
 
-
-
+            // Add a homonym actor to the result.
             homonymActors.add(homonymActor);
         }
-
 
         return homonymActors;
     }
