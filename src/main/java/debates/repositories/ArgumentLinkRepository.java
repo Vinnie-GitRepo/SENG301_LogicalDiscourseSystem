@@ -11,7 +11,7 @@ import java.sql.SQLException;
 public class ArgumentLinkRepository {
 
     public void insertNewArgumentLink(Connection connection, int arg1, int arg2) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("INSERT INTO argument_link(arg1, arg2) VALUE (?)");
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO argument_link VALUES (?,?)");
         statement.setInt(1, arg1);
         statement.setInt(2, arg2);
         statement.executeUpdate();

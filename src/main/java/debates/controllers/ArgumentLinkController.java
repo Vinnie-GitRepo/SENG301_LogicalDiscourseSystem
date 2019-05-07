@@ -74,7 +74,7 @@ public class ArgumentLinkController {
         System.out.println(argumentRepository.getAllArguments(connection));
         System.out.println("Please select an argument from above (enter its number).");
         int arg1 = input.nextInt();
-        while (arg1 >= argumentRepository.getArgumentsLength(connection) || arg1 < 0) {
+        while (arg1 > argumentRepository.getArgumentsLength(connection) || arg1 < 1) {
             System.out.println("That number is out of range. Please try again.");
             arg1 = input.nextInt();
         }
@@ -83,7 +83,7 @@ public class ArgumentLinkController {
         System.out.println(argumentRepository.getAllArguments(connection));
         System.out.println("Please select another argument from above (enter its number).");
         int arg2 = input.nextInt();
-        while (arg2 >= argumentRepository.getArgumentsLength(connection) || arg2 < 0 || arg2 == arg1) {
+        while (arg2 > argumentRepository.getArgumentsLength(connection) || arg2 < 1 || arg2 == arg1) {
             System.out.println("That number is out of range or matches the previous argument. Please try again.");
             arg2 = input.nextInt();
         }
@@ -101,6 +101,7 @@ public class ArgumentLinkController {
                 System.out.println("You cannot contradict two arguments from the same discourse.");
                 return;
             } else {
+                System.out.println("The argument link has been added to the database.");
                 argumentLinkRepository.insertNewArgumentLink(connection, arg1, arg2);
             }
 
