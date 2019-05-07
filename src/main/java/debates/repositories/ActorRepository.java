@@ -1,20 +1,25 @@
 package debates.repositories;
 
 import debates.models.Actor;
+import debates.models.Affiliation;
 import debates.models.Organisation;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
  * Class handling actors at a database level.
  */
 public class ActorRepository {
+
+
+
 
     /**
      * Used for queries related to organisations, as organisations are a part of affiliations.
@@ -52,11 +57,69 @@ public class ActorRepository {
      * @throws SQLException The exception thrown if any issues occur when working with the database.
      */
     public void insertNewActor(Connection connection, Actor actor) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("INSERT INTO actor VALUES (?,?)");
+
+        // Update the actor table with the new actor.
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO actor(first_name, last_name) VALUES (?,?)");
         statement.setString(1, actor.getFirstname());
         statement.setString(2, actor.getLastname());
         statement.executeUpdate();
         statement.closeOnCompletion();
+
+        // Retrieve the id of the actor inserted.
+        PreparedStatement idStatement = connection.prepareStatement("SELECT MAX(id) FROM actor");
+        ResultSet actorIdSet = idStatement.executeQuery();
+        int actorId = actorIdSet.getRow();
+
+        if (!actor.getAffiliations().isEmpty()) {
+            for (Affiliation affiliation : actor.getAffiliations()) {
+                insertNewAffiliation(connection, affiliation, actorId);
+            }
+        }
+    }
+
+
+    /**
+     * Inserts a new affiliation into the database.
+     * @param connection A non-null connection to the database.
+     *
+     * @throws SQLException The exception thrown if any issues occur when working with the database.
+     */
+    public void insertNewAffiliation(Connection connection, Affiliation affiliation, int actorId) throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement("INSERT INTO affiliation VALUES (?,?,?,?,?)")) {
+
+            // Role insertion
+            if (affiliation.getRole() == null) {
+                statement.setString(1, null);
+            } else {
+                statement.setString(1, affiliation.getRole());
+            }
+
+            // start date insertion
+            if (affiliation.getStartDate() == null) {
+                statement.setDate(2, null);
+            } else {
+                statement.setDate(2, Date.valueOf(affiliation.getStartDate()));
+            }
+
+            // end date insertion
+            if (affiliation.getEndDate() == null) {
+                statement.setDate(3, null);
+            } else {
+                statement.setDate(3, Date.valueOf(affiliation.getEndDate()));
+            }
+
+            // actor insertion
+            statement.setInt(4, actorId);
+
+            if (affiliation.getOrganisation() == null) {
+                statement.setString(5, null);
+            } else {
+                statement.setString(5, affiliation.getOrganisation().getName());
+            }
+            statement.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -85,23 +148,23 @@ public class ActorRepository {
         while (actorSet.next()) {
 
             // Get the name of each homonym actor in the result set.
-            String firstName = actorSet.getNString("fname");
-            String lastName = actorSet.getNString("lname");
+            String firstName = actorSet.getString("first_name");
+            String lastName = actorSet.getString("last_name");
 
-            // An actor with 
+            // An actor with
             Actor homonymActor = new Actor(firstName, lastName);
 
             // Get the affiliations for each homonym actor.
-            String actorId = actorSet.getNString("id");
+            String actorId = actorSet.getString("id");
             PreparedStatement affiliationStatement = connection.prepareStatement("SELECT * " +
                                                                                       "FROM Affiliation " +
-                                                                                      "WHERE id = ?");
+                                                                                      "WHERE actor = ?");
             affiliationStatement.setString(1, actorId);
             ResultSet affiliationSet = affiliationStatement.executeQuery();
             while (affiliationSet.next()) {
-                String role = affiliationSet.getNString("role");
-                Date startDate = affiliationSet.getDate("start");
-                Date endDate = affiliationSet.getDate("end");
+                String role = affiliationSet.getString("role");
+                LocalDate startDate = affiliationSet.getDate("start_date").toLocalDate();
+                LocalDate endDate = affiliationSet.getDate("end_date").toLocalDate();
                 String organisationText = affiliationSet.getNString("organisation");
 
                 // Get the organisation for each affiliation

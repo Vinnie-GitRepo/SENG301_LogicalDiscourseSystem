@@ -1,5 +1,6 @@
 package debates.models;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 /**
@@ -18,14 +19,14 @@ public class Affiliation {
      * The first day of the actor's affiliation with an organisation.
      * This field can be null as all fields are optional.
      */
-    private Date startDate;
+    private LocalDate startDate;
 
 
     /**
      * The last day of the actor's affiliation with an organisation.
      * This field can be null as all fields are optional.
      */
-    private Date endDate;
+    private LocalDate endDate;
 
 
     /**
@@ -43,7 +44,7 @@ public class Affiliation {
      * @param end The end date of the actor's affiliation with the organisation.
      * @param name The name of the organisation the actor was affiliated with.
      */
-    public Affiliation(String role, Date start, Date end, String name) {
+    public Affiliation(String role, LocalDate start, LocalDate end, String name) {
         this.role = role;
         this.startDate = start;
         this.endDate = end;
@@ -59,7 +60,7 @@ public class Affiliation {
      * @param end The end date of the actor's affiliation with the organisation.
      * @param org The name of the organisation the actor was affiliated with.
      */
-    public Affiliation(String role, Date start, Date end, Organisation org) {
+    public Affiliation(String role, LocalDate start, LocalDate end, Organisation org) {
         this.role = role;
         this.startDate = start;
         this.endDate = end;
@@ -88,19 +89,19 @@ public class Affiliation {
         this.role = role;
     }
 
-    public Date getStartDate() {
+    public LocalDate getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Date startDate) {
+    public void setStartDate(LocalDate startDate) {
         this.startDate = startDate;
     }
 
-    public Date getEndDate() {
+    public LocalDate getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Date endDate) {
+    public void setEndDate(LocalDate endDate) {
         this.endDate = endDate;
     }
 

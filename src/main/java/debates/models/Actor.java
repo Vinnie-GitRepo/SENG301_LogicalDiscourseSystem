@@ -1,5 +1,6 @@
 package debates.models;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -58,7 +59,7 @@ public class Actor {
      * @param end
      * @param newOrg
      */
-    public void insertAffiliation(String role, Date start, Date end, String newOrg) {
+    public void insertAffiliation(String role, LocalDate start, LocalDate end, String newOrg) {
         affiliations.add(new Affiliation(role, start, end, newOrg));
     }
 
@@ -70,7 +71,7 @@ public class Actor {
      * @param end
      * @param org
      */
-    public void insertAffiliation(String role, Date start, Date end, Organisation org) {
+    public void insertAffiliation(String role, LocalDate start, LocalDate end, Organisation org) {
         affiliations.add(new Affiliation(role, start, end, org));
     }
 

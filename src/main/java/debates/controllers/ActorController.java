@@ -9,6 +9,8 @@ import debates.repositories.OrganisationRepository;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -148,15 +150,16 @@ public class ActorController {
                 String roleText = affiliationRole.nextLine();
 
                 // Get the start date for an actor affiliation.
-                Date startDate = affiliationDateProcedure(START_DATE);
+                LocalDate startDate = affiliationDateProcedure(START_DATE);
 
                 // Get the end date for a user an actor affiliation.
-                Date endDate = affiliationDateProcedure(END_DATE);
+                LocalDate endDate = affiliationDateProcedure(END_DATE);
 
                 // Determine if the organisation exists, and if it does use that or else register a new organisation.
                 if (organisationRepository.nameExists(connection, organisationText)) {
                     Organisation organisation = organisationRepository.retrieveOrganisation(connection, organisationText);
                     actor.insertAffiliation(roleText, startDate, endDate, organisation);
+                    //actorRepository.insertNewAffiliation(connection, roleText, startDate, endDate, organisation);
                 } else {
                     actor.insertAffiliation(roleText, startDate, endDate, organisationText);
                 }
@@ -183,7 +186,7 @@ public class ActorController {
         System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n");
         for (Actor homonymActor : actors) {
             System.out.println("Actor Name: " + homonymActor.getFirstname() + " " + homonymActor.getLastname());
-            System.out.println("\nAffiliations: ");
+            System.out.println("Affiliations: ");
             if (homonymActor.getAffiliations().isEmpty()) {
                 System.out.println("No affiliations.\n");
             } else {
@@ -230,19 +233,20 @@ public class ActorController {
      * @param printString The worded context for the command line message. Should only be "starting" or "end"
      * @return a Date object to set as an Affiliation attribute.
      */
-    public Date affiliationDateProcedure(String printString) {
+    public LocalDate affiliationDateProcedure(String printString) {
 
         // Ask user for a date
         System.out.println("Provide the " + printString + " date of the affiliation, in DD/MM/YYYY format. (Optional)");
         Scanner affiliationDate = new Scanner(System.in);
         String dateText = affiliationDate.nextLine();
-        Date date = null;
+        LocalDate date = null;
 
         // Determine whether the date should remain null, and try to parse if an entry is detected.
         if (!dateText.equals("")) {
             try {
-                date = new SimpleDateFormat("dd/MM/yyyy").parse(dateText);
-            } catch (java.text.ParseException e) {
+                DateTimeFormatter format = DateTimeFormatter.ofPattern("dd/MM/YYYY");
+                date = LocalDate.parse(dateText, format);
+            } catch (Exception e) {
                 System.out.println("We couldn't process your input, so the date will remain null");
             }
         }
