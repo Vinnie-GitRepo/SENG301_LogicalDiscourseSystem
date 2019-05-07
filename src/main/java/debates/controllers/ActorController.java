@@ -45,7 +45,7 @@ public class ActorController {
     /**
      * Index controller linking the this feature back to the home page.
      */
-    private IndexController index = new IndexController();
+//    private IndexController index = new IndexController();
 
 
     /**
@@ -72,17 +72,22 @@ public class ActorController {
         // Check the user input for a valid answer
         try {
             String response = userResponse.nextLine();
+
+            while (!(response.equals(YES) || response.equals(NO))) {
+                System.out.println("Your response must be a 'y' or a 'n'. Try again.");
+                response = userResponse.nextLine();
+            }
+
             if (response.equals(YES)) {
                 nameActor(connection);
             } else if (response.equals(NO)) {
-                index.presentHomePageOptions(connection);
-            } else {
-                System.out.println("Your response must be a 'y' or a 'n'. Try again.");
-                registerActor(connection);
+                return;
             }
+
         } catch (Exception e) {
             e.printStackTrace();
-            registerActor(connection);
+//            registerActor(connection);
+            return;
         }
     }
 
@@ -94,38 +99,32 @@ public class ActorController {
      */
     public void nameActor(Connection connection) throws SQLException {
 
-
         // Ask user to give a first name for an actor, then scan for a response.
         System.out.println("Please provide a first name.");
         Scanner inputFirstName = new Scanner(System.in);
         String firstName = inputFirstName.nextLine();
 
-
         // Ask user to give a last name for an actor, then scan for a response.
-        System.out.println("Please provide a first name.");
+        System.out.println("Please provide a last name.");
         Scanner inputLastName = new Scanner(System.in);
         String lastName = inputLastName.nextLine();
 
-
         Actor actor = new Actor(firstName, lastName);
-
 
         // Ask user to add affiliations.
         registerAffiliation(connection, actor);
 
-
-
-
-
-        // Check is the names of the new actor match those of any actors in the database
+        // Check if the names of the new actor match those of any actors in the database
         if (actorRepository.isHomonym(connection, firstName, lastName)) {
             provideExistingActorDetails(connection, actor);
             boolean isConfirmed = getConfirmation();
             if (isConfirmed) {
                 actorRepository.insertNewActor(connection, actor);
+            } else {
+                return;
             }
         } else {
-
+            actorRepository.insertNewActor(connection, actor);
         }
     }
 
@@ -174,8 +173,9 @@ public class ActorController {
             } else if (response.equals(NO)) {
                 doneRegisteringAffiliations = true;
             } else {
-                System.out.println("Your response must be a 'y' or a 'n'. Try again.");
-                registerAffiliation(connection, actor);
+//                System.out.println("Your response must be a 'y' or a 'n'. Try again.");
+//                registerAffiliation(connection, actor);
+                return;
             }
         }
 
@@ -206,13 +206,24 @@ public class ActorController {
 
         boolean result = true;
 
+//        if (response.equals(YES)) {
+//            result = true;
+//        } else if (response.equals(NO)) {
+//            result = false;
+//        } else {
+//            System.out.println("Your response must be a 'y' or a 'n'. Try again.");
+//            getConfirmation();
+//        }
+
+        while (!(response.equals(YES) || response.equals(NO))) {
+            System.out.println("Your response must be a 'y' or a 'n'. Try again.");
+            response = userInput.nextLine();
+        }
+
         if (response.equals(YES)) {
             result = true;
         } else if (response.equals(NO)) {
             result = false;
-        } else {
-            System.out.println("Your response must be a 'y' or a 'n'. Try again.");
-            getConfirmation();
         }
 
         return result;

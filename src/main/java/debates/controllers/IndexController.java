@@ -15,6 +15,7 @@ public class IndexController {
     private ArgumentController argumentController = new ArgumentController();
     private DiscourseController discourseController = new DiscourseController();
     private OrganisationController organisationController = new OrganisationController();
+    private ArgumentLinkController argumentLinkController = new ArgumentLinkController();
 
     // Initialise String constants.
     private final String REGISTER_ORGANISATION = "1";
@@ -55,12 +56,13 @@ public class IndexController {
         } else if (choice.equals(REGISTER_ARGUMENT)) {
             argumentController.registerArgument(connection);
         } else if (choice.equals(LINK_ARGUMENTS)) {
-            // TODO: Implement argument linking.
+            argumentLinkController.registerArgumentLink(connection);
         } else if (choice.equals(EXIT_APPLICATION)) {
             System.exit(EXIT_SUCCESS);
         } else {
             System.out.println("\n[INVALID] - Please select a valid option, which is a listed number with no spacing.");
-            presentHomePageOptions(connection);
+//            presentHomePageOptions(connection);
+            return;
         }
     }
 

@@ -27,7 +27,7 @@ public class ActorRepository {
     public boolean isHomonym(Connection connection, String firstName, String lastName) throws SQLException {
 
         // Query the database for an actor with names equivalent to those of the new actor being registered.
-        PreparedStatement check = connection.prepareStatement("SELECT * FROM actor WHERE fname = ? AND lname = ?");
+        PreparedStatement check = connection.prepareStatement("SELECT * FROM actor WHERE first_name = ? AND last_name = ?");
         check.setString(1, firstName);
         check.setString(2, lastName);
         ResultSet set = check.executeQuery();
@@ -45,7 +45,7 @@ public class ActorRepository {
      * @throws SQLException The exception thrown if any issues occur when working with the database.
      */
     public void insertNewActor(Connection connection, Actor actor) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("INSERT INTO Actor()");
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO actor VALUES (?)");
     }
 
 

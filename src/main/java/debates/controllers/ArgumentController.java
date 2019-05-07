@@ -30,7 +30,7 @@ public class ArgumentController {
     /**
      * Index controller linking the this feature back to the home page.
      */
-    private IndexController index = new IndexController();
+//    private IndexController index = new IndexController();
 
 
     /**
@@ -58,14 +58,19 @@ public class ArgumentController {
         // Check the user input for a valid answer.
         try {
             String response = userResponse.nextLine();
+
+            while (!(response.equals(YES) || response.equals(NO))) {
+                System.out.println("Your response must be a 'y' or a 'n'. Try again.");
+                response = userResponse.nextLine();
+            }
+
             if (response.equals(YES)) {
                 createArgument(connection);
             } else if (response.equals(NO)) {
                 //TODO: return to main selection
-            } else {
-                System.out.println("Your response must be a 'y' or a 'n'. Try again.");
-                registerArgument(connection);
+                return;
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -120,8 +125,58 @@ public class ArgumentController {
             System.out.println("There was an issue with your input. Please try again.");
             createArgument(connection);
         }
+    }
 
+    public void whileLoop(Connection connection) throws SQLException {
+        // Ask user to specify a discourse, then scan for a response.
+        Scanner input = new Scanner(System.in);
+        System.out.println("Please select a discourse.");
+        String d = input.nextLine();
+        while (!discourseRepository.nameExists(connection, d)) {
+            System.out.println("That discourse does not exist. Please try again.");
+            d = input.nextLine();
+        }
+        Discourse discourse = discourseRepository.getDiscourse(connection, d);
+        int discourseLength = discourse.getText().length();
 
+        System.out.println("Please type a start index in the discourse.");
+        int start = input.nextInt();
+        while (!(start < discourseLength)) {
+            System.out.println("That number is out of range. Please try again.");
+            start = input.nextInt();
+        }
+
+        // Ask user to specify end indices within the discourse, then scan for a response.
+        System.out.println("Please type an end index in the discourse.");
+        int end = input.nextInt();
+        while (!(end < discourseLength && start < end)) {
+            System.out.println("That number is out of range. Please try again.");
+            end = input.nextInt();
+        }
+
+        // Check that the specified indices do not already exist with an argument.
+        while (argumentRepository.argumentExists(connection, start, end)) {
+            System.out.println("The argument already exists within the database. Please try again.");
+            // Ask user to specify start indices within the discourse, then scan for a response.
+            System.out.println("Please type a start index in the discourse.");
+            start = input.nextInt();
+            while (!(start < discourseLength)) {
+                System.out.println("That number is out of range. Please try again.");
+                start = input.nextInt();
+            }
+            // Ask user to specify end indices within the discourse, then scan for a response.
+            System.out.println("Please type an end index in the discourse.");
+            end = input.nextInt();
+            while (!(end < discourseLength && start < end)) {
+                System.out.println("That number is out of range. Please try again.");
+                end = input.nextInt();
+            }
+        }
+
+        // Add a new argument to the database.
+        String rephrasing = discourse.getText().substring(start, end);
+        argumentRepository.insertNewArgument(connection, rephrasing, start, end);
+        System.out.println("The argument, " + rephrasing + ", has been added successfully.");
     }
 
 }

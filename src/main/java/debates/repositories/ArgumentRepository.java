@@ -12,10 +12,17 @@ public class ArgumentRepository {
 
 
     public String getAllArguments(Connection connection) throws SQLException {
-        PreparedStatement discourse = connection.prepareStatement("SELECT (id, rephrasing) FROM argument");
-        ResultSet set = discourse.executeQuery();
-        discourse.closeOnCompletion();
+        PreparedStatement argument = connection.prepareStatement("SELECT (id, rephrasing) FROM argument");
+        ResultSet set = argument.executeQuery();
+        argument.closeOnCompletion();
         return set.toString();
+    }
+
+    public int getArgumentsLength(Connection connection) throws SQLException {
+        PreparedStatement count = connection.prepareStatement("SELECT count(*) FROM argument");
+        ResultSet set = count.executeQuery();
+        count.closeOnCompletion();
+        return set.getInt(0);
     }
 
     public String getDiscourseName(Connection connection, int argId) throws SQLException {

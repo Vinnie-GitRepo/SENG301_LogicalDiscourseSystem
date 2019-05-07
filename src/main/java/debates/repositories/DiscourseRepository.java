@@ -29,8 +29,9 @@ public class DiscourseRepository {
     }
 
     public void insertNewDiscourse(Connection connection, String name, String source) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("INSERT INTO discourse(name, source) VALUE (?)");
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO discourse(name, source) VALUES (?,?)");
         statement.setString(1, name);
+        statement.setString(2, source);
         statement.executeUpdate();
         statement.closeOnCompletion();
     }

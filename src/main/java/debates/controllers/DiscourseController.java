@@ -27,7 +27,7 @@ public class DiscourseController {
     /**
      * Index controller linking the this feature back to the home page.
      */
-    private IndexController index = new IndexController();
+//    private IndexController index = new IndexController();
 
 
     /**
@@ -54,14 +54,19 @@ public class DiscourseController {
         // Check the user input for a valid answer
         try {
             String response = userResponse.nextLine();
+
+            while (!(response.equals(YES) || response.equals(NO))) {
+                System.out.println("Your response must be a 'y' or a 'n'. Try again.");
+                response = userResponse.nextLine();
+            }
+
             if (response.equals(YES)) {
                 nameDiscourse(connection);
             } else if (response.equals(NO)) {
                 //TODO: return to main selection
-            } else {
-                System.out.println("Your response must be a 'y' or a 'n'. Try again.");
-                registerDiscourse(connection);
+                return;
             }
+
         } catch (Exception e) {
             e.printStackTrace();
             registerDiscourse(connection);
@@ -81,6 +86,7 @@ public class DiscourseController {
         String newName = inputName.nextLine();
 
         // Ask user to name an existing source, then scan for a response
+        System.out.println("Please provide a source name.");
         String sourceName = inputName.nextLine();
 
         // Check the user input against the acceptance criteria.
@@ -88,11 +94,11 @@ public class DiscourseController {
             discourseRepository.insertNewDiscourse(connection, newName, sourceName);
             System.out.println("The discourse, " + newName + ", has been added successfully.");
         } else if (discourseRepository.nameExists(connection, newName)) {
-            System.out.println("The discourse, " + newName + ", already exists within the database. Please enter another name.");
-            nameDiscourse(connection);
+            System.out.println("The discourse, " + newName + ", already exists within the database.");
+            return;
         } else {
-            System.out.println("There was an issue with your input. Please try again.");
-            nameDiscourse(connection);
+            System.out.println("There was an issue with your input.");
+            return;
         }
     }
 

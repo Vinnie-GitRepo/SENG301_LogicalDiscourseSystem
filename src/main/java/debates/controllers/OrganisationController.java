@@ -26,7 +26,7 @@ public class OrganisationController {
     /**
      * Index controller linking the this feature back to the home page.
      */
-    private IndexController index = new IndexController();
+//    private IndexController index = new IndexController();
 
 
     /**
@@ -49,14 +49,19 @@ public class OrganisationController {
         // Check the user input for a valid answer.
         try {
             String response = userResponse.nextLine();
+
+            while (!(response.equals(YES) || response.equals(NO))) {
+                System.out.println("Your response must be a 'y' or a 'n'. Try again.");
+                response = userResponse.nextLine();
+            }
+
             if (response.equals(YES)) {
                 nameOrganisation(connection);
             } else if (response.equals(NO)) {
                 //TODO: return to main selection
-            } else {
-                System.out.println("Your response must be a 'y' or a 'n'. Try again.");
-                registerOrganisation(connection);
+                return;
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -80,11 +85,11 @@ public class OrganisationController {
             repository.insertNewOrganisation(connection, newName);
             System.out.println("The organisation, " + newName + ", has been added successfully.");
         } else if (repository.nameExists(connection, newName)) {
-            System.out.println("The organisation, " + newName + ", already exists within the database. Please enter another name.");
-            nameOrganisation(connection);
+            System.out.println("The organisation, " + newName + ", already exists within the database.");
+            return;
         } else {
-            System.out.println("There was an issue with your input. Please try again.");
-            nameOrganisation(connection);
+            System.out.println("There was an issue with your input.");
+            return;
         }
     }
 

@@ -46,13 +46,16 @@ public class ArgumentLinkController {
         // Check the user input for a valid answer.
         try {
             String response = userResponse.nextLine();
+
+            while (!(response.equals(YES) || response.equals(NO))) {
+                System.out.println("Your response must be a 'y' or a 'n'. Try again.");
+                response = userResponse.nextLine();
+            }
+
             if (response.equals(YES)) {
                 linkArguments(connection);
             } else if (response.equals(NO)) {
                 //TODO: return to main selection
-            } else {
-                System.out.println("Your response must be a 'y' or a 'n'. Try again.");
-                registerArgumentLink(connection);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -67,42 +70,45 @@ public class ArgumentLinkController {
      */
     public void linkArguments(Connection connection) throws SQLException {
 
-        // Ask user to specify two arguments, then scan for responses.
+        // Ask user to specify an argument (after listing all arguments), then scan for responses.
         Scanner input = new Scanner(System.in);
         System.out.println(argumentRepository.getAllArguments(connection));
-        System.out.println("Please select an argument from above");
+        System.out.println("Please select an argument from above (enter its number).");
         int arg1 = input.nextInt();
-        System.out.println(argumentRepository.getAllArguments(connection));
-        System.out.println("Please select another argument from above");
-        int arg2 = input.nextInt();
-        if (arg1 == arg2) {
-            System.out.println("You cannot link an argument with itself. Please try again.");
-            linkArguments(connection);
-        } else {
-            // Ask user to specify the type of argument link they would like to make.
-            System.out.println("Would you like to link these arguments by (1) Support or (2) Contradiction?");
-            int choice = input.nextInt();
-            if (choice == 1) {
-                // Link the two arguments.
-                argumentLinkRepository.insertNewArgumentLink(connection, arg1, arg2);
-            } else if (choice == 2) {
-                // Check if the two arguments are part of the same discourse.
-                // If they are, they cannot be linked. Else, create an argument link.
-                if (argumentRepository.getDiscourseName(connection, arg1) == argumentRepository.getDiscourseName(connection, arg2)) {
-                    System.out.println("You cannot contradict two arguments from the same discourse. Please try again.");
-                    linkArguments(connection);
-                } else {
-                    argumentLinkRepository.insertNewArgumentLink(connection, arg1, arg2);
-                }
-
-            } else {
-                System.out.println("That is not a valid choice. Please try again.");
-                linkArguments(connection);
-            }
-
-
+        while (arg1 >= argumentRepository.getArgumentsLength(connection) || arg1 < 0) {
+            System.out.println("That number is out of range. Please try again.");
+            arg1 = input.nextInt();
         }
 
+        // Ask user to specify another argument (after listing all arguments), then scan for responses.
+        System.out.println(argumentRepository.getAllArguments(connection));
+        System.out.println("Please select another argument from above (enter its number).");
+        int arg2 = input.nextInt();
+        while (arg2 >= argumentRepository.getArgumentsLength(connection) || arg2 < 0 || arg2 == arg1) {
+            System.out.println("That number is out of range or matches the previous argument. Please try again.");
+            arg2 = input.nextInt();
+        }
+
+        // Ask user to specify the type of argument link they would like to make.
+        System.out.println("Would you like to link these arguments by (1) Support or (2) Contradiction?");
+        int choice = input.nextInt();
+        if (choice == 1) {
+            // Link the two arguments.
+            argumentLinkRepository.insertNewArgumentLink(connection, arg1, arg2);
+        } else if (choice == 2) {
+            // Check if the two arguments are part of the same discourse.
+            // If they are, they cannot be linked. Else, create an argument link.
+            if (argumentRepository.getDiscourseName(connection, arg1) == argumentRepository.getDiscourseName(connection, arg2)) {
+                System.out.println("You cannot contradict two arguments from the same discourse.");
+                return;
+            } else {
+                argumentLinkRepository.insertNewArgumentLink(connection, arg1, arg2);
+            }
+
+        } else {
+            System.out.println("That is not a valid choice.");
+            return;
+        }
     }
 
 

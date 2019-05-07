@@ -13,7 +13,7 @@ import java.sql.SQLException;
 public class OrganisationRepository {
 
     public void insertNewOrganisation(Connection connection, String name) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("INSERT INTO organisation(name) VALUE (?)");
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO organisation VALUES (?)");
         statement.setString(1, name);
         statement.executeUpdate();
         statement.closeOnCompletion();
