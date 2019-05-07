@@ -1,6 +1,5 @@
 package debates.controllers;
 
-import debates.models.Discourse;
 import debates.repositories.ArgumentLinkRepository;
 import debates.repositories.ArgumentRepository;
 
@@ -98,7 +97,7 @@ public class ArgumentLinkController {
         } else if (choice == 2) {
             // Check if the two arguments are part of the same discourse.
             // If they are, they cannot be linked. Else, create an argument link.
-            if (argumentRepository.getDiscourseName(connection, arg1) == argumentRepository.getDiscourseName(connection, arg2)) {
+            if (argumentRepository.getDiscourseNameFromArgument(connection, arg1) == argumentRepository.getDiscourseNameFromArgument(connection, arg2)) {
                 System.out.println("You cannot contradict two arguments from the same discourse.");
                 return;
             } else {

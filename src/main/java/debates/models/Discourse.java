@@ -35,6 +35,8 @@ public class Discourse {
         this.text = t;
     }
 
+    public String getName() { return name; }
+
     public String getText() {
         return text;
     }

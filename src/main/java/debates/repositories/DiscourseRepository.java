@@ -24,14 +24,15 @@ public class DiscourseRepository {
         String discourseName = set.getString("name");
         String s = set.getString("source");
         Source source = new Source(s);
-        String text = set.getString("text");
+        String text = set.getString("d_text");
         return (new Discourse(discourseName, source, text));
     }
 
-    public void insertNewDiscourse(Connection connection, String name, String source) throws SQLException {
-        PreparedStatement statement = connection.prepareStatement("INSERT INTO discourse(name, source) VALUES (?,?)");
+    public void insertNewDiscourse(Connection connection, String name, String source, String text) throws SQLException {
+        PreparedStatement statement = connection.prepareStatement("INSERT INTO discourse(name, source, d_text) VALUES (?,?,?)");
         statement.setString(1, name);
         statement.setString(2, source);
+        statement.setString(3, text);
         statement.executeUpdate();
         statement.closeOnCompletion();
     }
